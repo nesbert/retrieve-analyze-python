@@ -1,11 +1,21 @@
+from . import analyze
 from . import retrieve
 
 def lambda_handler(event, context):
     # fetch data
     user_data = retrieve.fetch_user_data(event['id'])
     # analyze data
-    # save to S3
-    return user_data
+    comparison = analyze.compare_user_data(user_data)
+    # TODO save to S3
+    # id, id_match?, name_match?, email_match?, gender_match?, status_match?
+    return [
+        event['id'],
+        comparison['id'],
+        comparison['name'],
+        comparison['email'],
+        comparison['gender'],
+        comparison['status']
+    ]
 
 def main():
     import argparse

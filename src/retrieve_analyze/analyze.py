@@ -6,7 +6,21 @@ from retrieve_analyze import OUTPUT_DIR
 def user_directory(user_id):
     return f'{OUTPUT_DIR}/{user_id}'
 
-def compare_user_data(user_id):
+def compare_user_data(data_dic):
+    # Extract the 'data' from users_v1.json
+    users_v1_data = data_dic['users_v1'].get('data')
+
+    # Compare the JSON objects
+    comparison = {}
+    for key in data_dic['users_v2'].keys():
+        if users_v1_data.get(key) == data_dic['users_v2'].get(key):
+            comparison[key] = True
+        else:
+            comparison[key] = False
+
+    return comparison
+
+def read_user_data(user_id):
     directory = user_directory(user_id)
     users_v1_file = f'{directory}/users_v1.json'
     users_v2_file = f'{directory}/users_v2.json'
@@ -14,29 +28,21 @@ def compare_user_data(user_id):
     print(f"Analyzing user data from {directory}")
 
     try:
+        data_dic = {}
         # Load the JSON data from each file
         with open(users_v1_file) as f:
-            users_v1 = json.load(f)
-            if not isinstance(users_v1, dict):
+            data_dic['users_v1'] = json.load(f)
+            if not isinstance(data_dic['users_v1'], dict):
                 print(f'Error: Data in {users_v1_file} is not a JSON object')
                 return
 
         with open(users_v2_file) as f:
-            users_v2 = json.load(f)
-            if not isinstance(users_v2, dict):
+            data_dic['users_v2'] = json.load(f)
+            if not isinstance(data_dic['users_v2'], dict):
                 print(f'Error: Data in {users_v2_file} is not a JSON object')
                 return
 
-        # Extract the 'data' from users_v1.json
-        users_v1_data = users_v1.get('data')
-
-        # Compare the JSON objects
-        comparison = {}
-        for key in users_v2.keys():
-            if users_v1_data.get(key) == users_v2.get(key):
-                comparison[key] = True
-            else:
-                comparison[key] = False
+        comparison = analyze_user_data(data_dic)
 
         return {
             'id': user_id,
@@ -84,7 +90,7 @@ def main():
     parser.add_argument('user_id', type=str, help='User ID to analyze data')
     args = parser.parse_args()
 
-    analysis_data = compare_user_data(args.user_id)
+    analysis_data = read_user_data(args.user_id)
 
     save_analysis_data(args.user_id, analysis_data)
 

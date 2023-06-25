@@ -25,17 +25,19 @@ Here are a few ways to use this application.
 
 ### CLI Examples
 
+#### Project CLI Scripts
+
+Requires venv to be active `source venv/bin/activate`.
+
 ```sh
 # fetch user data from APIs and save to files './out/users/{user_id}'
 retrieve {user_id}
 
 # compare user data from saved to files './out/users/{user_id}' and create `analyze.json`
 analyze {user_id}
-```
 
-```sh
-# get a list of users for testing
-curl -s "https://gorest.co.in/public/v2/users" | jq -r '.[] | [.id, .email] | @csv' > "./out/users/list-$(date +"%Y-%m-%dT%H%M").csv"
+# test lambda handler locally
+lambda '{"id": 3186779}'
 ```
 
 #### AWS Lambda Layer Creation
@@ -54,6 +56,13 @@ cd dist/layer
 zip -r retrieve-analyze-python.zip *
 ```
 
+#### Misc Helpers
+
+```sh
+# get a list of users for testing
+curl -s "https://gorest.co.in/public/v2/users" | jq -r '.[] | [.id, .email] | @csv' > "./out/users/list-$(date +"%Y-%m-%dT%H%M").csv"
+```
+
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -67,6 +76,7 @@ zip -r retrieve-analyze-python.zip *
     - [x] Create an AWS Lambda
     - [x] Create an AWS Lambda Layer
     - [ ] Save data on AWS S3
+    - [ ] Create AWS Step Functions (Distributed Maps)
 - [ ] Developer Experience
     - [x] Setup repo structure
     - [ ] Environment and configuration properties

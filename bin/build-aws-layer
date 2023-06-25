@@ -24,4 +24,4 @@ cd "$PROJECT_ROOT_DIR/dist/layer" || exit
 zip -r retrieve-analyze-python.zip *
 
 echo "Zip file created at: $PWD/retrieve-analyze-python.zip"
-echo "Done, file ready for upload to AWS Lambda Layers."
+echo "Done, file ready for upload to AWS Lambda Layer."
