@@ -1,0 +1,17 @@
+[project]
+name = "retrieve-analyze-python"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+keywords = ["tutorial", "development"]
+dependencies = [
+  "requests"
+]
+
+[project.urls]
+"Source" = "https://github.com/nesbert/retrieve-analyze-python"
+
+[project.scripts]
+retrieve = "retrieve_analyze.retrieve:main"
+analyze = "retrieve_analyze.analyze:main"
