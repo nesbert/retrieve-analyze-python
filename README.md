@@ -33,16 +33,39 @@ retrieve {user_id}
 analyze {user_id}
 ```
 
+```sh
+# get a list of users for testing
+curl -s "https://gorest.co.in/public/v2/users" | jq -r '.[] | [.id, .email] | @csv' > "./out/users/list-$(date +"%Y-%m-%dT%H%M").csv"
+```
+
+#### AWS Lambda Layer Creation
+
+Starting from the project root.
+
+```sh
+# clean dist dir
+rm -rfv dist/layer
+
+# package project
+pip install . -t dist/layer/python/lib/python3.10/site-packages
+
+# zip layer
+cd dist/layer
+zip -r retrieve-analyze-python.zip *
+```
+
+
 <!-- ROADMAP -->
 ## Roadmap
 
 - [x] Learn Python basics
-- [ ] MVP
+- [x] MVP
     - [x] Retrieve data
     - [x] Save data
     - [x] Analyze data
 - [ ] Cloud Support
-    - [ ] Create an AWS Lambda
+    - [x] Create an AWS Lambda
+    - [x] Create an AWS Lambda Layer
     - [ ] Save data on AWS S3
 - [ ] Developer Experience
     - [x] Setup repo structure

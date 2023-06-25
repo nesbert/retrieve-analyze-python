@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Define the path of the project root directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+PROJECT_ROOT_DIR="$SCRIPT_DIR/.."
+
+# Check if the required directories/files exist in the project root directory
+if [ ! -d "$PROJECT_ROOT_DIR/src" ]; then
+    echo "This script must be run from the project root directory. Exiting."
+    exit 1
+fi
+
+# Clean dist dir
+echo "Cleaning dist dir..."
+rm -rfv "$PROJECT_ROOT_DIR/dist/layer"
+
+# Package project
+echo "Packaging project..."
+pip install . -t "$PROJECT_ROOT_DIR/dist/layer/python/lib/python3.10/site-packages"
+
+# Zip layer
+echo "Zipping layer..."
+cd "$PROJECT_ROOT_DIR/dist/layer" || exit
+zip -r retrieve-analyze-python.zip *
+
+echo "Zip file created at: $PWD/retrieve-analyze-python.zip"
+echo "Done, file ready for upload to AWS Lambda Layers."

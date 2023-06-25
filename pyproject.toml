@@ -15,3 +15,4 @@ dependencies = [
 [project.scripts]
 retrieve = "retrieve_analyze.retrieve:main"
 analyze = "retrieve_analyze.analyze:main"
+lambda = "retrieve_analyze.lambda_handler:main"
