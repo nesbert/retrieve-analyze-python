@@ -8,8 +8,6 @@ from retrieve_analyze import OUTPUT_DIR
 
 # Fetch user details from each source/module
 def fetch_user_data(user_id):
-    print(f"Retrieving user #{user_id} from sources")
-
     try:
         user_data_v1 = users_v1.fetch(user_id)
     except requests.exceptions.HTTPError as err:
@@ -33,8 +31,6 @@ def fetch_user_data(user_id):
 def save_user_data(user_id, user_data):
     user_directory = f'{OUTPUT_DIR}/{user_id}'
 
-    print(f"Saving user data to {user_directory}")
-
     try:
         # Ensure directory exists, create it if necessary
         os.makedirs(user_directory, exist_ok=True)
@@ -57,13 +53,15 @@ def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('user_id', type=str, help='User ID to retrieve data from API sources')
+    parser.add_argument('--save', nargs='?', const=False, type=bool)
     args = parser.parse_args()
 
     user_data = fetch_user_data(args.user_id)
 
-    save_user_data(args.user_id, user_data)
+    if (args.save):
+        save_user_data(args.user_id, user_data)
 
-    return user_data
+    print(json.dumps(user_data))
 
 if __name__ == "__main__":
     main()

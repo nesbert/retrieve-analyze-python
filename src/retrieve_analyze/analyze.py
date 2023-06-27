@@ -6,7 +6,7 @@ from retrieve_analyze import OUTPUT_DIR
 def user_directory(user_id):
     return f'{OUTPUT_DIR}/{user_id}'
 
-def compare_user_data(data_dic):
+def analyze_user_data(data_dic):
     # Extract the 'data' from users_v1.json
     users_v1_data = data_dic['users_v1'].get('data')
 
@@ -24,8 +24,6 @@ def read_user_data(user_id):
     directory = user_directory(user_id)
     users_v1_file = f'{directory}/users_v1.json'
     users_v2_file = f'{directory}/users_v2.json'
-
-    print(f"Analyzing user data from {directory}")
 
     try:
         data_dic = {}
@@ -64,14 +62,15 @@ def save_analysis_data(user_id, analysis_data):
         return
 
     directory = user_directory(user_id)
-    print(f"Saving analysis to {directory}")
+    analysis_file = f'{directory}/analysis.json'
+    print(f"Saving analysis to {analysis_file}")
 
     try:
         # Ensure directory exists, create it if necessary
         os.makedirs(directory, exist_ok=True)
 
         # Save data from each source to a separate JSON file
-        with open(f'{directory}/analysis.json', 'w') as f:
+        with open(analysis_file, 'w') as f:
             json.dump(analysis_data, f)
 
     except PermissionError:
@@ -86,15 +85,24 @@ def save_analysis_data(user_id, analysis_data):
 
 def main():
     import argparse
+    import sys
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('user_id', type=str, help='User ID to analyze data')
+    parser.add_argument('user_id', type=str, nargs='?', help='User ID to analyze data')
+    parser.add_argument('--save', nargs='?', const=0, type=int)
     args = parser.parse_args()
 
-    analysis_data = read_user_data(args.user_id)
+    if args.user_id:
+        analysis_data = read_user_data(args.user_id)
+        if args.save:
+            save_analysis_data(args.user_id, analysis_data)
+    else:
+        # No arguments, read from standard input
+        user_data = json.load(sys.stdin)
+        analysis_data = analyze_user_data(user_data)
 
-    save_analysis_data(args.user_id, analysis_data)
-
-    return analysis_data
+    if analysis_data:
+        print(json.dumps(analysis_data))
 
 if __name__ == "__main__":
     main()

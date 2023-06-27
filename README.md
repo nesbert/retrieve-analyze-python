@@ -30,11 +30,20 @@ Here are a few ways to use this application.
 Requires venv to be active `source venv/bin/activate`.
 
 ```sh
-# fetch user data from APIs and save to files './out/users/{user_id}'
+# retrieve user data from APIs
 retrieve {user_id}
 
-# compare user data from saved to files './out/users/{user_id}' and create `analyze.json`
+# retrieve user data from APIs and save to files './out/users/{user_id}'
+retrieve {user_id} --save 1
+
+# analyze user data from saved to files './out/users/{user_id}'
 analyze {user_id}
+
+# analyze user and create `analysis.json`
+analyze {user_id} --save 1
+
+# retrieve & analyze user realtime from APIs
+retrieve {user_id} | analyze
 
 # test lambda handler locally
 lambda '{"id": 3186779}'
