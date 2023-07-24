@@ -1,18 +1,33 @@
-[project]
+[tool.poetry]
 name = "retrieve-analyze-python"
 version = "0.0.1"
+description = "Retrieve and analyze user details from different API versions (uses Go REST). Goal of this project is to refresh myself with Python and create an AWS λ with this example."
+authors = ["Nesbert Hidalgo <nesbert@gmail.com>"]
+license = "MIT"
 readme = "README.md"
-requires-python = ">=3.10"
-license = {file = "LICENSE"}
+repository = "https://github.com/nesbert/retrieve-analyze-python"
 keywords = ["tutorial", "development"]
-dependencies = [
-  "requests"
+packages = [
+  { include = "retrieve_analyze", from = "src" }
 ]
 
-[project.urls]
-"Source" = "https://github.com/nesbert/retrieve-analyze-python"
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
 
-[project.scripts]
-retrieve = "retrieve_analyze.retrieve:main"
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pylint = "^2.17.4"
+black = "^23.7.0"
+coverage = "^7.2.7"
+requests-mock = "^1.11.0"
+
+[tool.poetry.scripts]
 analyze = "retrieve_analyze.analyze:main"
-lambda = "retrieve_analyze.lambda_handler:main"
+lambda-handler = "retrieve_analyze.lambda_handler:main"
+retrieve = "retrieve_analyze.retrieve:main"
+retrieve-all = "retrieve_analyze.retrieve_all:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
